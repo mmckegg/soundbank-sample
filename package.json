@@ -1,0 +1,33 @@
+{
+  "name": "soundbank-sample",
+  "version": "0.0.1",
+  "description": "Sample player AudioNode source extended with automatable transpose, tuning and amp.",
+  "main": "index.js",
+  "dependencies": {
+    "audio-param-transform": "~0.0.2",
+    "custom-audio-node": "~0.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "beefy test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mmckegg/soundbank-sample.git"
+  },
+  "keywords": [
+    "soundbank",
+    "sample",
+    "buffer",
+    "audio",
+    "player",
+    "waapi",
+    "midi"
+  ],
+  "author": "Matt McKegg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mmckegg/soundbank-sample/issues"
+  },
+  "homepage": "https://github.com/mmckegg/soundbank-sample"
+}
