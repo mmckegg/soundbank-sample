@@ -29,6 +29,18 @@ Set the trigger mode of the audio node: 'hold', 'oneshot', 'loop'
 
 'oneshot' is the same as hold, except the `node.start()` method returns the time the `node.stop()` should be called.
 
+### source.url (get/set)
+
+Choose the audio buffer source. The url must match a key in the passed in `audioContext.sampleCache`.
+
+### source.startOffset (get/set)
+
+Choose the fraction of duration (between `0` and `1`) to use as audio in point. 
+
+### source.endOffset (get/set)
+
+Choose the fraction of duration (between `0` and `1`) to use as audio out or loop point. 
+
 ### source.start(at)
 
 Schedule note start. Can only be called once. For each event, create a new instance of sample player.
@@ -52,6 +64,8 @@ var sample = Sample(audioContext)
 
 sample.url = 'hiss.wav'
 sample.mode = 'oneshot'
+
+sample.startOffset = 0.2
 sample.tune.value = 35 // cents
 sample.transpose.value = -3 // semitones
 
