@@ -35,6 +35,8 @@ module.exports = function(audioContext){
     },
   })
 
+  node.onended = null
+
   node.start = function(at){
     var sampleCache = audioContext.sampleCache || {}
     var buffer = sampleCache[url]
@@ -42,6 +44,7 @@ module.exports = function(audioContext){
       player.buffer = buffer
       player.loopStart = startOffset * player.buffer.duration
       player.loopEnd = endOffset * player.buffer.duration
+      player.onended = node.onended
 
       if (player.loop){
         player.start(at, player.loopStart, player.buffer.duration)
