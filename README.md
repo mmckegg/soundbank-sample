@@ -3,7 +3,7 @@ soundbank-sample
 
 Sample player AudioNode source extended with automatable transpose, tuning and amp.
 
-Intended for use as a source in [soundbank](https://github.com/mmckegg/soundbank), but it is compatiable with any old Web Audio API AudioNode set up.
+Intended for use as a source in [soundbank](https://github.com/mmckegg/soundbank), but it is compatible with any Web Audio API AudioNode set up.
 
 ## Install
 
@@ -47,7 +47,7 @@ Specify the `startOffset` and `endOffset` as an array `[start, end]`.
 
 ### source.start(at)
 
-Schedule note start. Can only be called once. For each event, create a new instance of sample player.
+Schedule note start. Can only be called once. For each event, you need to create a new instance.
 
 ### source.stop(at)
 
