@@ -1,7 +1,7 @@
 var createAudioNode = require('custom-audio-node')
 var extendTransform = require('audio-param-transform')
 
-module.exports = function(audioContext){
+module.exports = function Sample(audioContext){
 
   var player = audioContext.createBufferSource()
   var gain = audioContext.createGain()
@@ -117,6 +117,12 @@ module.exports = function(audioContext){
   })
 
   return node
+}
+
+module.exports.prime = function(context, desc){
+  if (desc.url && context.sampleCache && !context.sampleCache[desc.url] && context.loadSample){
+    context.loadSample(desc.url)
+  }
 }
 
 function multiplyCents(a, value){
