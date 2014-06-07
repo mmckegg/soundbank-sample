@@ -14,8 +14,7 @@ module.exports = function(audioContext){
 
   var url = null
   var mode = 'hold'
-  var startOffset = 0
-  var endOffset = 1
+  var offset = [0, 1]
   var started = false
 
   player.connect(gain)
@@ -42,8 +41,8 @@ module.exports = function(audioContext){
     var buffer = sampleCache[url]
     if (!started && buffer){
       player.buffer = buffer
-      player.loopStart = startOffset * player.buffer.duration
-      player.loopEnd = endOffset * player.buffer.duration
+      player.loopStart = offset[0] * player.buffer.duration
+      player.loopEnd = offset[1] * player.buffer.duration
       player.onended = node.onended
 
       if (player.loop){
@@ -76,27 +75,34 @@ module.exports = function(audioContext){
     }
   })
 
-  Object.defineProperty(node, 'startOffset', {
+  Object.defineProperty(node, 'offset', {
     get: function(){
-      return startOffset
+      return offset
     }, 
     set: function(value){
-      if (player.buffer){
-        player.loopStart = player.buffer.duration * value
+      if (player.buffer && value){
+        player.loopStart = player.buffer.duration * value[0]
+        player.loopEnd = player.buffer.duration * value[1]
       }
-      startOffset = value
+      offset = value || [0, 1]
+    }
+  })
+
+  Object.defineProperty(node, 'startOffset', {
+    get: function(){
+      return offset[0]
+    }, 
+    set: function(value){
+      node.offset = [value || 0, node.offset[1]]
     }
   })
 
   Object.defineProperty(node, 'endOffset', {
     get: function(){
-      return endOffset
+      return offset[1]
     }, 
     set: function(value){
-      if (player.buffer){
-        player.loopEnd = player.buffer.duration * value
-      }
-      endOffset = value
+      node.offset = [node.offset[0], value || 0]
     }
   })
 

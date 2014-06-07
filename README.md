@@ -41,6 +41,10 @@ Choose the fraction of duration (between `0` and `1`) to use as audio in point.
 
 Choose the fraction of duration (between `0` and `1`) to use as audio out or loop point. 
 
+### source.offset (get/set)
+
+Specify the `startOffset` and `endOffset` as an array `[start, end]`.
+
 ### source.start(at)
 
 Schedule note start. Can only be called once. For each event, create a new instance of sample player.
