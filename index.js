@@ -45,17 +45,18 @@ module.exports = function Sample(audioContext){
       player.loopEnd = offset[1] * player.buffer.duration
       player.onended = node.onended
 
-      if (player.loop){
-        player.start(at, player.loopStart, player.buffer.duration)
-      } else {
-        player.start(at, player.loopStart, player.loopEnd - player.loopStart)
+      if (mode !== 'release'){
+        if (player.loop){
+          player.start(at, player.loopStart, player.buffer.duration)
+        } else {
+          player.start(at, player.loopStart, player.loopEnd - player.loopStart)
+        }
+        if (mode == 'oneshot'){ // provide an end time
+          return at + player.loopEnd - player.loopStart
+        }
+        started = true
       }
 
-      if (mode == 'oneshot'){ // provide an end time
-        return at + player.loopEnd - player.loopStart
-      }
-
-      started = true
     }
   }
 
@@ -63,6 +64,10 @@ module.exports = function Sample(audioContext){
     if (started){
       player.stop(at)
       stopped = true
+    } else if (mode == 'release'){
+      player.start(at, player.loopStart, player.loopEnd - player.loopStart)
+      started = true
+      return at + player.loopEnd - player.loopStart
     }
   }
 
