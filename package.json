@@ -4,8 +4,8 @@
   "description": "Sample player AudioNode source extended with automatable transpose, tuning and amp.",
   "main": "index.js",
   "dependencies": {
-    "audio-param-transform": "~0.2.0",
-    "custom-audio-node": "~0.1.1"
+    "audio-param-transform": "~0.3.0",
+    "custom-audio-node": "^0.3.0"
   },
   "devDependencies": {},
   "scripts": {
