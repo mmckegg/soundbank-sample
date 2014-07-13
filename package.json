@@ -1,6 +1,6 @@
 {
   "name": "soundbank-sample",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Sample player AudioNode source extended with automatable transpose, tuning and amp.",
   "main": "index.js",
   "dependencies": {
