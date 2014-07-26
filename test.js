@@ -1,6 +1,6 @@
 var Sample = require('./index')
 
-var audioContext = new webkitAudioContext()
+var audioContext = new AudioContext()
 var sample = Sample(audioContext)
 sample.url = 'hiss.wav'
 

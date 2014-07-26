@@ -58,7 +58,7 @@ Schedule note stop.
 ```js
 var Sample = require('soundbank-sample')
 
-var audioContext = new webkitAudioContext()
+var audioContext = new AudioContext()
 audioContext.sampleCache = {} // see test.js for full details
 loadSample('/sounds/hiss.wav', function(err, buffer){
   audioContext.sampleCache['hiss.wav'] = buffer
