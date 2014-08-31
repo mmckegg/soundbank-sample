@@ -14,15 +14,14 @@ sample.connect(audioContext.destination)
 addValueSlider(sample, 'startOffset', 0.0001, 0, 1)
 addValueSlider(sample, 'endOffset', 0.0001, 0, 1)
 
-addSlider(sample.amp, 0.001, 0, 10)
-addSlider(sample.transpose, 1, -24, 24)
-addSlider(sample.tune, 1, -600, 600)
+addSlider('amp', sample.amp, 0.001, 0, 10)
+addValueSlider(sample, 'transpose', 1, -24, 24)
+addValueSlider(sample, 'tune', 1, -600, 600)
 
 var triggerButton = document.createElement('button')
-triggerButton.textContent = 'Trigger 10s (reload page between trigger)'
+triggerButton.textContent = 'Start'
 triggerButton.onclick = function(){
   sample.start(audioContext.currentTime)
-  sample.stop(audioContext.currentTime+10)
 }
 document.body.appendChild(triggerButton)
 
@@ -54,23 +53,21 @@ bufferPicker.onchange = function(){
 document.body.appendChild(bufferPicker)
 
 
-function addSlider(param, step, min, max){
+function addSlider(name, param, step, min, max){
   var container = document.createElement('div')
-  container.appendChild(document.createTextNode(param.name))
-  var label = document.createTextNode(param.defaultValue)
+  container.appendChild(document.createTextNode(name))
+  var label = document.createTextNode(param.value)
   var slider = document.createElement('input')
   slider.type = 'range'
-  slider.min = min != null ? min : (param.min || 0)
-  slider.max = max != null ? max : (param.max || 100)
-  slider.value = param.defaultValue
+  slider.min = min != null ? min : (param.minValue || 0)
+  slider.max = max != null ? max : (param.maxValue || 100)
+  slider.value = param.value
 
   slider.style.width = '300px'
 
-  if (step){
-    slider.step = step
-  }
-
-  slider.onchange = function(){
+  slider.step = step || 0.1
+  
+  slider.oninput = function(){
     label.data = this.value
     param.value = parseFloat(this.value)
   }
@@ -95,7 +92,7 @@ function addValueSlider(node, property, step, min, max){
     slider.step = step
   }
 
-  slider.onchange = function(){
+  slider.oninput = function(){
     label.data = this.value
     node[property] = parseFloat(this.value)
   }

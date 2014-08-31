@@ -1,127 +1,135 @@
-var createAudioNode = require('custom-audio-node')
-var extendTransform = require('audio-param-transform')
-
 module.exports = function Sample(audioContext){
 
   var player = audioContext.createBufferSource()
-  var gain = audioContext.createGain()
 
-  extendTransform(player.playbackRate, audioContext)
+  player.playbackRate.value = 1
 
-  var baseRateParam = player.playbackRate.transform()
-  var tuneParam = player.playbackRate.transform(multiplyCents)
-  var transposeParam = player.playbackRate.transform(multiplyTranspose)
+  var node = audioContext.createGain() 
+  player.connect(node)
 
-  var url = null
-  var mode = 'hold'
-  var offset = [0, 1]
-  var started = false
-
-  player.connect(gain)
-
-  var node = createAudioNode(null, gain, {
-    amp: {
-      min: 0, defaultValue: 1,
-      target: gain.gain,
-    },
-    tune: {
-      defaultValue: 0,
-      target: tuneParam
-    },
-    transpose: {
-      defaultValue: 0,
-      target: transposeParam
-    },
-  })
-
+  node.amp = node.gain
   node.onended = null
+  node.url = null
 
-  node.start = function(at){
-    var sampleCache = audioContext.sampleCache || {}
-    var buffer = sampleCache[url]
-    if (!started && buffer){
-      player.buffer = buffer
-      player.loopStart = offset[0] * player.buffer.duration
-      player.loopEnd = offset[1] * player.buffer.duration
-      player.onended = node.onended
+  node.start = start
+  node.stop = stop
 
-      if (mode !== 'release'){
-        if (player.loop){
-          player.start(at, player.loopStart, player.buffer.duration)
-        } else {
-          player.start(at, player.loopStart, player.loopEnd - player.loopStart)
-        }
-        if (mode == 'oneshot'){ // provide an end time
-          return at + player.loopEnd - player.loopStart
-        }
-        started = true
-      }
+  node._context = audioContext
+  node._player = player
+  node._mode = 'hold'
+  node._offset = [0, 1]
+  node._transpose = 0
+  node._tune = 0
+  node._refreshPlaybackRate = refreshPlaybackRate
+  node._started = false
 
-    }
-  }
+  Object.defineProperties(node, properties)
 
-  node.stop = function(at){
-    if (started){
-      player.stop(at)
-      stopped = true
-    } else if (mode == 'release'){
-      player.start(at, player.loopStart, player.loopEnd - player.loopStart)
-      started = true
-      return at + player.loopEnd - player.loopStart
-    }
-  }
+  return node
+}
 
-  Object.defineProperty(node, 'url', {
+var properties = {
+  tune: {
     get: function(){
-      return url
+      return this._tune
+    },
+    set: function(value){
+      this._tune = value
+      this._refreshPlaybackRate()
+    }
+  },
+  transpose: {
+    get: function(){
+      return this._transpose
+    },
+    set: function(value){
+      this._transpose = value
+      this._refreshPlaybackRate()
+    }
+  },
+  offset: {
+    get: function(){
+      return this._offset
     }, 
     set: function(value){
-      url = value
-    }
-  })
-
-  Object.defineProperty(node, 'offset', {
-    get: function(){
-      return offset
-    }, 
-    set: function(value){
+      var player = this._player
       if (player.buffer && value){
         player.loopStart = player.buffer.duration * value[0]
         player.loopEnd = player.buffer.duration * value[1]
       }
-      offset = value || [0, 1]
+      this._offset = value || [0, 1]
     }
-  })
-
-  Object.defineProperty(node, 'startOffset', {
+  },
+  startOffset: {
     get: function(){
-      return offset[0]
+      return this._offset[0]
     }, 
     set: function(value){
-      node.offset = [value || 0, node.offset[1]]
+      this.offset = [value || 0, this.offset[1]]
     }
-  })
-
-  Object.defineProperty(node, 'endOffset', {
+  },
+  endOffset: {
     get: function(){
-      return offset[1]
+      return this._offset[1]
     }, 
     set: function(value){
-      node.offset = [node.offset[0], value || 0]
+      this.offset = [this.offset[0], value || 0]
     }
-  })
-
-  Object.defineProperty(node, 'mode', {
+  },
+  mode: {
     get: function(){
-      return mode
+      return this._mode
     }, 
     set: function(value){
-      mode = value
-      player.loop = mode === 'loop'
+      var player = this._player
+      this._mode = value
+      player.loop = value === 'loop'
     }
-  })
+  }
+}
 
-  return node
+function start(at){
+  var node = this
+  var audioContext = node._context
+  var player = node._player
+  var sampleCache = audioContext.sampleCache || {}
+  var buffer = sampleCache[node.url]
+  if (!node._started && buffer){
+    player.buffer = buffer
+    player.loopStart = node._offset[0] * player.buffer.duration
+    player.loopEnd = node._offset[1] * player.buffer.duration
+    player.onended = node.onended
+
+    if (node._mode !== 'release'){
+      if (player.loop){
+        player.start(at, player.loopStart, player.buffer.duration)
+      } else {
+        player.start(at, player.loopStart, player.loopEnd - player.loopStart)
+      }
+      if (node._mode == 'oneshot'){ // provide an end time
+        return at + player.loopEnd - player.loopStart
+      }
+      node._started = true
+    }
+
+  }
+}
+
+function stop(at){
+  var node = this
+  var player = node._player
+  if (node._started){
+    player.stop(at)
+    stopped = true
+  } else if (this._mode == 'release'){
+    player.start(at, player.loopStart, player.loopEnd - player.loopStart)
+    node._started = true
+    return at + player.loopEnd - player.loopStart
+  }
+}
+
+function refreshPlaybackRate(){
+  this._player.playbackRate.value = multiplyTranspose(this._transpose + (this._tune / 100))
 }
 
 module.exports.prime = function(context, desc){
@@ -130,10 +138,6 @@ module.exports.prime = function(context, desc){
   }
 }
 
-function multiplyCents(a, value){
-  return multiplyTranspose(a, value / 100)
-}
-
-function multiplyTranspose(a, value){
-  return a * Math.pow(2, value / 12)
+function multiplyTranspose(value){
+  return Math.pow(2, value / 12)
 }

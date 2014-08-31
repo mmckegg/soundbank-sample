@@ -4,12 +4,13 @@
   "description": "Sample player AudioNode source extended with automatable transpose, tuning and amp.",
   "main": "index.js",
   "dependencies": {
-    "audio-param-transform": "^1.0.0",
-    "custom-audio-node": "^0.3.0"
+    "audio-voltage": "^1.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "beefy": "^2.1.1"
+  },
   "scripts": {
-    "test": "beefy test.js"
+    "example": "beefy example.js"
   },
   "repository": {
     "type": "git",

@@ -21,7 +21,16 @@ var Sample = require('soundbank-sample')
 
 Returns a source AudioNode.
 
-**AudioParams**: transpose, tune, amp
+**AudioParams**: amp
+
+### source.transpose (get/set)
+
+Due to a bug in Chrome, this is not currently an AudioParam, but will be in the future.
+See https://code.google.com/p/chromium/issues/detail?id=311284
+
+### source.tune (get/set)
+
+Due to a bug in Chrome, this is not currently an AudioParam, but will be in the future.
 
 ### source.mode (get/set)
 
@@ -53,13 +62,13 @@ Schedule note start. Can only be called once. For each event, you need to create
 
 Schedule note stop.
 
-## Standalone Example
+## Example
 
 ```js
 var Sample = require('soundbank-sample')
 
 var audioContext = new AudioContext()
-audioContext.sampleCache = {} // see test.js for full details
+audioContext.sampleCache = {} // see example.js for full details
 loadSample('/sounds/hiss.wav', function(err, buffer){
   audioContext.sampleCache['hiss.wav'] = buffer
 })
@@ -70,10 +79,12 @@ sample.url = 'hiss.wav'
 sample.mode = 'oneshot'
 
 sample.startOffset = 0.2
-sample.tune.value = 35 // cents
-sample.transpose.value = -3 // semitones
+sample.tune = 35 // cents
+sample.transpose = -3 // semitones
 
 // trigger start and end (oneshot will suggest an end time as return value)
 var endTime = sample.start(0)
 sample.stop(endTime || audioContext.currentTime + 1)
 ```
+
+To run the example clone the repo and `npm install && npm run example` then navigate to [http://localhost:9966/](http://localhost:9966/).
