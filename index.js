@@ -94,7 +94,8 @@ function start(at){
   var player = node._player
   var sampleCache = audioContext.sampleCache || {}
   var buffer = sampleCache[node.url]
-  if (!node._started && buffer){
+
+  if (!node._started && buffer instanceof AudioBuffer){
     player.buffer = buffer
     player.loopStart = node._offset[0] * player.buffer.duration
     player.loopEnd = node._offset[1] * player.buffer.duration
@@ -111,8 +112,8 @@ function start(at){
       }
       node._started = true
     }
-
   }
+
 }
 
 function stop(at){
