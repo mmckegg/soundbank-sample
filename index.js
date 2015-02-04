@@ -9,11 +9,11 @@ module.exports = function Sample(audioContext){
 
   node.amp = node.gain
   node.onended = null
-  node.url = null
 
   node.start = start
   node.stop = stop
 
+  node.buffer = null
   node._context = audioContext
   node._player = player
   node._mode = 'hold'
@@ -93,10 +93,9 @@ function start(at){
   var audioContext = node._context
   var player = node._player
   var sampleCache = audioContext.sampleCache || {}
-  var buffer = sampleCache[node.url]
 
-  if (!node._started && buffer instanceof AudioBuffer){
-    player.buffer = buffer
+  if (!node._started && this.buffer instanceof AudioBuffer){
+    player.buffer = this.buffer
     player.loopStart = node._offset[0] * player.buffer.duration
     player.loopEnd = node._offset[1] * player.buffer.duration
     player.onended = node.onended
@@ -131,12 +130,6 @@ function stop(at){
 
 function refreshPlaybackRate(){
   this._player.playbackRate.value = multiplyTranspose(this._transpose + (this._tune / 100))
-}
-
-module.exports.prime = function(context, desc){
-  if (desc.url && context.sampleCache && !context.sampleCache[desc.url] && context.loadSample){
-    context.loadSample(desc.url)
-  }
 }
 
 function multiplyTranspose(value){

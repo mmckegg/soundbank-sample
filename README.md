@@ -38,9 +38,9 @@ Set the trigger mode of the audio node: 'hold', 'oneshot', 'loop'
 
 'oneshot' is the same as hold, except the `node.start()` method returns the time the `node.stop()` should be called.
 
-### source.url (get/set)
+### source.buffer (get/set)
 
-Choose the audio buffer source. The url must match a key in the passed in `audioContext.sampleCache`.
+Specify an instance of [AudioBuffer](https://developer.mozilla.org/en-US/docs/Web/API/AudioBuffer) for playback.
 
 ### source.startOffset (get/set)
 
