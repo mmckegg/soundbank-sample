@@ -128,8 +128,12 @@ function stop(at){
   }
 }
 
+function f(n){
+  return parseFloat(this._transpose)||0
+}
+
 function refreshPlaybackRate(){
-  this._player.playbackRate.value = multiplyTranspose(this._transpose + (this._tune / 100))
+  this._player.playbackRate.value = multiplyTranspose(f(this._transpose) + (f(this._tune) / 100))
 }
 
 function multiplyTranspose(value){
