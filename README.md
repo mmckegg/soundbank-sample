@@ -5,6 +5,14 @@ Sample player AudioNode source extended with automatable transpose, tuning and a
 
 Intended for use as a source in [soundbank](https://github.com/mmckegg/soundbank), but it is compatible with any Web Audio API AudioNode set up.
 
+## Deprecated
+
+Use [audio-slot/sources/sample](https://github.com/mmckegg/audio-slot) instead.
+
+## Stability
+
+Deprecated: Expect no more changes. Avoid using this module.
+
 ## Install
 
 ```bash
@@ -44,11 +52,11 @@ Specify an instance of [AudioBuffer](https://developer.mozilla.org/en-US/docs/We
 
 ### source.startOffset (get/set)
 
-Choose the fraction of duration (between `0` and `1`) to use as audio in point. 
+Choose the fraction of duration (between `0` and `1`) to use as audio in point.
 
 ### source.endOffset (get/set)
 
-Choose the fraction of duration (between `0` and `1`) to use as audio out or loop point. 
+Choose the fraction of duration (between `0` and `1`) to use as audio out or loop point.
 
 ### source.offset (get/set)
 

@@ -7,7 +7,8 @@
     "audio-voltage": "^1.0.0"
   },
   "devDependencies": {
-    "beefy": "^2.1.1"
+    "beefy": "^2.1.1",
+    "browserify": "^13.0.1"
   },
   "scripts": {
     "example": "beefy example.js"
